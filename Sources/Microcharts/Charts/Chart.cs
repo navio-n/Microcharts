@@ -9,6 +9,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Microcharts.Charts;
 using SkiaSharp;
 
 namespace Microcharts
@@ -16,7 +17,7 @@ namespace Microcharts
     /// <summary>
     /// A chart.
     /// </summary>
-    public abstract class Chart : INotifyPropertyChanged
+    public abstract class Chart : IInvalidated, INotifyPropertyChanged
     {
         #region Fields
 
@@ -473,11 +474,11 @@ namespace Microcharts
         /// <param name="target">The target instance.</param>
         /// <param name="onInvalidate">Callback when chart is invalidated.</param>
         /// <typeparam name="TTarget">The target subsriber type.</typeparam>
-        public InvalidatedWeakEventHandler<TTarget> ObserveInvalidate<TTarget>(TTarget target,
+        public InvalidatedWeakEventHandler<Chart, TTarget> ObserveInvalidate<TTarget>(TTarget target,
             Action<TTarget> onInvalidate)
             where TTarget : class
         {
-            var weakHandler = new InvalidatedWeakEventHandler<TTarget>(this, target, onInvalidate);
+            var weakHandler = new InvalidatedWeakEventHandler<Chart, TTarget>(this, target, onInvalidate);
             weakHandler.Subsribe();
             return weakHandler;
         }
